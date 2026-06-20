@@ -1,6 +1,5 @@
-from django.test import TestCase
-
 import json
+from unittest.mock import patch
 from django.test import TestCase, Client
 
 
@@ -22,7 +21,10 @@ class PromptRoutesTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("response", response.json())
 
-    def test_should_receive_ai_response(self):
+    @patch("ai_app.services.RealAIService.generate_response")
+    def test_should_receive_ai_response(self, mock_generate_response):
+        mock_generate_response.return_value = "Resposta mockada da IA"
+
         payload = {
             "prompt": "Explique testes unitários"
         }
@@ -35,3 +37,4 @@ class PromptRoutesTest(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertIn("response", response.json())
+        self.assertEqual(response.json()["response"], "Resposta mockada da IA")
