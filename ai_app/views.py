@@ -27,6 +27,8 @@ class BasePromptView(View):
 
         except json.JSONDecodeError:
             return JsonResponse({"error": "JSON inválido."}, status=400)
+        except Exception as error:
+            return JsonResponse({"error": str(error)}, status=500)
 
 
 class SimulatedPromptView(BasePromptView):
